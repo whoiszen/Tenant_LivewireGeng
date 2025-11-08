@@ -16,9 +16,90 @@
     </div>
 
     <div class="row">
-        <!-- Main Content -->
-        <div class="col-12">
+        <!-- Sidebar Filters -->
+        <div class="col-md-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Filters</h5>
+                </div>
+                <div class="card-body">
+                    <!-- Location Filter -->
+                    <div class="mb-3">
+                        <label for="location" class="form-label fw-semibold">Location</label>
+                        <input wire:model.live="location" type="text" class="form-control" id="location" placeholder="Enter location...">
+                    </div>
 
+                    <!-- Price Range Filter -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Price Range</label>
+                        <div class="row g-2">
+                            <div class="col-6">
+                                <input wire:model.live="minPrice" type="number" class="form-control" placeholder="Min" min="0">
+                            </div>
+                            <div class="col-6">
+                                <input wire:model.live="maxPrice" type="number" class="form-control" placeholder="Max" min="0">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Capacity Filter -->
+                    <div class="mb-3">
+                        <label for="capacity" class="form-label fw-semibold">Capacity</label>
+                        <select wire:model.live="capacity" class="form-select" id="capacity">
+                            <option value="">Any</option>
+                            <option value="1">1 Person</option>
+                            <option value="2">2 Persons</option>
+                            <option value="3">3 Persons</option>
+                            <option value="4">4 Persons</option>
+                            <option value="5">5 Persons</option>
+                            <option value="6">6 Persons</option>
+                        </select>
+                    </div>
+
+                    <!-- Add-ons Filter -->
+                    <div class="mb-3">
+                        <label class="form-label fw-semibold">Add-ons</label>
+                        <div class="form-check">
+                            <input wire:model.live="selectedAddons" class="form-check-input" type="checkbox" value="wifi" id="wifi">
+                            <label class="form-check-label" for="wifi">
+                                WiFi
+                            </label>
+                        </div>
+                        <div class="form-check">
+                            <input wire:model.live="selectedAddons" class="form-check-input" type="checkbox" value="aircon" id="aircon">
+                            <label class="form-check-label" for="aircon">
+                                Air Conditioning
+                            </label>
+                        </div>
+                    </div>
+
+                    <!-- Clear Filters Button -->
+                    <button wire:click="$set('location', ''); $set('minPrice', ''); $set('maxPrice', ''); $set('capacity', ''); $set('selectedAddons', [])" class="btn btn-outline-secondary w-100">Clear Filters</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <!-- Filter State Indicator -->
+            @if($filterType !== 'all')
+                <div class="text-center mb-3">
+                    <span class="badge bg-primary fs-6 px-3 py-2">Showing {{ $this->getFilterLabel() }}</span>
+                </div>
+            @endif
+
+            <!-- Filter Tabs -->
+            <ul class="nav nav-tabs justify-content-center mb-4" id="roomFilterTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button wire:click="$set('filterType', 'all')" class="nav-link {{ $filterType === 'all' ? 'active' : '' }}" id="all-tab" type="button" role="tab" aria-controls="all" aria-selected="{{ $filterType === 'all' ? 'true' : 'false' }}">All Rooms</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button wire:click="$set('filterType', 'shared')" class="nav-link {{ $filterType === 'shared' ? 'active' : '' }}" id="shared-tab" type="button" role="tab" aria-controls="shared" aria-selected="{{ $filterType === 'shared' ? 'true' : 'false' }}">Shared</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button wire:click="$set('filterType', 'private')" class="nav-link {{ $filterType === 'private' ? 'active' : '' }}" id="private-tab" type="button" role="tab" aria-controls="private" aria-selected="{{ $filterType === 'private' ? 'true' : 'false' }}">Private</button>
+                </li>
+            </ul>
 
             <!-- Room Grid -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
@@ -123,7 +204,9 @@
         <symbol id="star-fill" viewBox="0 0 16 16">
             <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
         </symbol>
-
+        <symbol id="hamburger" viewBox="0 0 16 16">
+            <path fill-rule="evenodd" d="M2.5 12a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5zm0-4a.5.5 0 0 1 .5-.5h10a.5.5 0 0 1 0 1H3a.5.5 0 0 1-.5-.5z"/>
+        </symbol>
         <symbol id="filter" viewBox="0 0 16 16">
             <path d="M1.5 1.5A.5.5 0 0 1 2 1h12a.5.5 0 0 1 .5.5v2a.5.5 0 0 1-.128.334L10 8.692V13.5a.5.5 0 0 1-.342.474l-3 1A.5.5 0 0 1 6 14.5V8.692L1.628 3.834A.5.5 0 0 1 1.5 3.5v-2zM2.5 2v1.308l4.372 4.858A.5.5 0 0 1 7 8.5v5.306l2-.666V8.5a.5.5 0 0 1 .128-.334L13.5 3.308V2h-11z"/>
         </symbol>

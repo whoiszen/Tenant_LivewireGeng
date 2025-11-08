@@ -85,35 +85,9 @@ class RenterList extends Component
                 $q->where('room_number', 'like', '%' . $this->searchQuery . '%')
                     ->orWhere('price', 'like', '%' . $this->searchQuery . '%');
             })
-            ->when($this->location, function ($q) {
-                $q->where('room_number', 'like', '%' . $this->location . '%');
-            })
-            ->when($this->minPrice, function ($q) {
-                $q->where('price', '>=', $this->minPrice);
-            })
-            ->when($this->maxPrice, function ($q) {
-                $q->where('price', '<=', $this->maxPrice);
-            })
-            ->when($this->capacity, function ($q) {
-                $q->where('capacity', $this->capacity);
-            })
             ->when($this->filterType !== 'all', function ($q) {
                 $q->where('capacity', $this->filterType === 'shared' ? '>' : '=', 1);
             });
-
-        // For add-ons, since not directly linked, we'll filter based on capacity for now
-        // Assuming shared rooms have WiFi, private have Aircon, etc.
-        if (!empty($this->selectedAddons)) {
-            $query->where(function ($q) {
-                foreach ($this->selectedAddons as $addon) {
-                    if ($addon === 'wifi') {
-                        $q->orWhere('capacity', '>', 1); // Shared rooms have WiFi
-                    } elseif ($addon === 'aircon') {
-                        $q->orWhere('capacity', '=', 1); // Private rooms have Aircon
-                    }
-                }
-            });
-        }
 
         $rooms = $query->paginate(12); // 12 rooms per page
 

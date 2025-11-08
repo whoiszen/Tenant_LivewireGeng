@@ -18,7 +18,25 @@
     <div class="row">
         <!-- Main Content -->
         <div class="col-12">
+            <!-- Filter State Indicator -->
+            @if($filterType !== 'all')
+                <div class="text-center mb-3">
+                    <span class="badge bg-primary fs-6 px-3 py-2">Showing {{ $this->getFilterLabel() }}</span>
+                </div>
+            @endif
 
+            <!-- Filter Tabs -->
+            <ul class="nav nav-tabs justify-content-center mb-4" id="roomFilterTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                    <button wire:click="$set('filterType', 'all')" class="nav-link {{ $filterType === 'all' ? 'active' : '' }}" id="all-tab" type="button" role="tab" aria-controls="all" aria-selected="{{ $filterType === 'all' ? 'true' : 'false' }}">All Rooms</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button wire:click="$set('filterType', 'shared')" class="nav-link {{ $filterType === 'shared' ? 'active' : '' }}" id="shared-tab" type="button" role="tab" aria-controls="shared" aria-selected="{{ $filterType === 'shared' ? 'true' : 'false' }}">Shared</button>
+                </li>
+                <li class="nav-item" role="presentation">
+                    <button wire:click="$set('filterType', 'private')" class="nav-link {{ $filterType === 'private' ? 'active' : '' }}" id="private-tab" type="button" role="tab" aria-controls="private" aria-selected="{{ $filterType === 'private' ? 'true' : 'false' }}">Private</button>
+                </li>
+            </ul>
 
             <!-- Room Grid -->
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 g-4">
